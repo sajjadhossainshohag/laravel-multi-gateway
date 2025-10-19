@@ -1,5 +1,5 @@
 {
-  "name": "sajjadhossainshohag/laravel-multi-gateway",
+  "name": "paymentsetu/paybridge",
   "description": "Multi-Gateway Supports in One Pack",
   "type": "library",
   "require": {
@@ -8,7 +8,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Sajjadhossainshohag\\LaravelMultiGateway\\": "src/"
+      "PaymentSetu\\PayBridge\\": "src/"
     }
   },
   "authors": [
