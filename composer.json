@@ -1,0 +1,22 @@
+{
+  "name": "sajjadhossainshohag/laravel-multi-gateway",
+  "description": "Multi-Gateway Supports in One Pack",
+  "type": "library",
+  "require": {
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Sajjadhossainshohag\\LaravelMultiGateway\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Sajjad Hossain Shohag",
+      "email": "sajjadhossainshohagbd@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
