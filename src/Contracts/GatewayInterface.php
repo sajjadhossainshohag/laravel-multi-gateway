@@ -14,4 +14,6 @@ interface GatewayInterface
     public function handleIpn(mixed $request): GatewayResponseInterface;
 
     public function supports(string $method): bool;
+
+    public function isSandbox(): bool;
 }

@@ -33,4 +33,9 @@ class FakeGateway implements GatewayInterface
     {
         return true;
     }
+
+    public function isSandbox(): bool
+    {
+        return true;
+    }
 }

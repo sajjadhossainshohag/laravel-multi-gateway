@@ -19,7 +19,7 @@ class StripeGateway implements GatewayInterface
     {
         $response = Http::withToken($this->config['api_secret'])
             ->asForm()
-            ->post('https://api.stripe.com/v1/charges', [
+            ->post($this->getBaseUrl() . '/charges', [
                 'amount' => $parameters['amount'] * 100, // Convert to cents
                 'currency' => $parameters['currency'] ?? 'usd',
                 'source' => $parameters['token'],
@@ -33,7 +33,7 @@ class StripeGateway implements GatewayInterface
     {
         $response = Http::withToken($this->config['api_secret'])
             ->asForm()
-            ->post('https://api.stripe.com/v1/refunds', [
+            ->post($this->getBaseUrl() . '/refunds', [
                 'charge' => $parameters['transaction_id'],
                 'amount' => isset($parameters['amount']) ? $parameters['amount'] * 100 : null,
             ]);
@@ -46,7 +46,7 @@ class StripeGateway implements GatewayInterface
         // Stripe Payouts example
         $response = Http::withToken($this->config['api_secret'])
             ->asForm()
-            ->post('https://api.stripe.com/v1/payouts', [
+            ->post($this->getBaseUrl() . '/payouts', [
                 'amount' => $parameters['amount'] * 100,
                 'currency' => $parameters['currency'] ?? 'usd',
             ]);
@@ -61,8 +61,20 @@ class StripeGateway implements GatewayInterface
         return new StripeResponse($data, 200);
     }
 
+    protected function getBaseUrl(): string
+    {
+        return $this->isSandbox()
+            ? 'https://api.stripe.com/v1' // Test mode URL
+            : 'https://api.stripe.com/v1'; // Live mode URL (Stripe uses the same, but others don't)
+    }
+
     public function supports(string $method): bool
     {
         return in_array($method, ['charge', 'refund', 'withdraw', 'ipn']);
+    }
+
+    public function isSandbox(): bool
+    {
+        return (bool) ($this->config['sandbox'] ?? config('paybridge.sandbox', true));
     }
 }
