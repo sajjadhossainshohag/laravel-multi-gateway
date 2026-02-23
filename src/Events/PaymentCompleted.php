@@ -2,4 +2,16 @@
 
 namespace PaymentSetu\PayBridge\Events;
 
-class PaymentCompleted {}
+use PaymentSetu\PayBridge\Contracts\GatewayResponseInterface;
+
+class PaymentCompleted
+{
+    public $response;
+    public $gateway;
+
+    public function __construct(GatewayResponseInterface $response, string $gateway)
+    {
+        $this->response = $response;
+        $this->gateway = $gateway;
+    }
+}

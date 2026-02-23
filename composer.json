@@ -1,6 +1,6 @@
 {
   "name": "paymentsetu/paybridge",
-  "description": "Multi-Gateway Supports in One Pack",
+  "description": "Multi Payment Gateway Supports in One Pack",
   "type": "library",
   "require": {
     "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
