@@ -13,7 +13,7 @@ interface GatewayResponseInterface
 
     public function getTransactionReference(): ?string;
 
-    public function getMessage(): ?string;
+    public function getErrorMessage(): ?string;
 
     public function getData(): array;
 }

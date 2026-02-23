@@ -2,6 +2,7 @@
 
 namespace PaymentSetu\PayBridge;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class PayBridgeServiceProvider extends ServiceProvider
@@ -21,6 +22,13 @@ class PayBridgeServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/paybridge.php' => config_path('paybridge.php'),
             ], 'paybridge-config');
+        }
+
+        // If app environment is local, load routes
+        if (!$this->app->isProduction()) {
+            Http::globalOptions([
+                'verify' => false,
+            ]);
         }
     }
 }

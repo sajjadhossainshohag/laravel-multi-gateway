@@ -13,7 +13,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "tests/"
+      "Tests\\": "tests/",
+      "Workbench\\App\\": "workbench/app/"
     }
   },
   "authors": [
@@ -25,7 +26,18 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
-    "pestphp/pest": "^4.1"
+    "pestphp/pest": "^4.1",
+    "orchestra/testbench": "*"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "PaymentSetu\\PayBridge\\PayBridgeServiceProvider"
+      ],
+      "aliases": {
+        "PayBridge": "PaymentSetu\\PayBridge\\Facades\\PayBridge"
+      }
+    }
   },
   "config": {
     "allow-plugins": {

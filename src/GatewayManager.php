@@ -49,6 +49,17 @@ class GatewayManager extends Manager
     }
 
     /**
+     * Create a Stripe gateway driver.
+     *
+     * @param  array  $config
+     * @return \PaymentSetu\PayBridge\Gateways\Stripe\StripeGateway
+     */
+    protected function createStripeDriver(array $config)
+    {
+        return new \PaymentSetu\PayBridge\Gateways\Stripe\StripeGateway($config);
+    }
+
+    /**
      * Get a gateway instance.
      *
      * @param  string|null  $name
