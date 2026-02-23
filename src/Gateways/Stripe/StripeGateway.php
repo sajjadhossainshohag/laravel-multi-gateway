@@ -15,20 +15,57 @@ class StripeGateway implements GatewayInterface
         $this->config = $config;
     }
 
+    /**
+     * @param array{
+     *  amount: float|int,
+     *  currency: string,
+     *  success_url: string,
+     *  cancel_url: string,
+     *  description?: string,
+     *  line_items?: array,
+     *  mode?: "payment"|"subscription"|"setup",
+     *  metadata?: array
+     * } $parameters
+     */
     public function charge(array $parameters): GatewayResponseInterface
     {
+        $payload = [
+            'success_url' => $parameters['success_url'] ?? url('/'),
+            'cancel_url' => $parameters['cancel_url'] ?? url('/'),
+            'mode' => $parameters['mode'] ?? 'payment',
+        ];
+
+        if (isset($parameters['line_items'])) {
+            $payload['line_items'] = $parameters['line_items'];
+        } else {
+            $payload['line_items'] = [
+                [
+                    'price_data' => [
+                        'currency' => $parameters['currency'] ?? 'usd',
+                        'unit_amount' => $parameters['amount'] * 100,
+                        'product_data' => [
+                            'name' => $parameters['description'] ?? 'Payment',
+                        ],
+                    ],
+                    'quantity' => 1,
+                ],
+            ];
+        }
+
         $response = Http::withToken($this->config['api_secret'])
             ->asForm()
-            ->post($this->getBaseUrl() . '/charges', [
-                'amount' => $parameters['amount'] * 100, // Convert to cents
-                'currency' => $parameters['currency'] ?? 'usd',
-                'source' => $parameters['token'],
-                'description' => $parameters['description'] ?? '',
-            ]);
+            ->post($this->getBaseUrl() . '/checkout/sessions', $payload);
 
         return new StripeResponse($response->json(), $response->status());
     }
 
+    /**
+     * @param array{
+     *  transaction_id: string,
+     *  amount?: float|int,
+     *  reason?: string
+     * } $parameters
+     */
     public function refund(array $parameters): GatewayResponseInterface
     {
         $response = Http::withToken($this->config['api_secret'])
@@ -41,9 +78,17 @@ class StripeGateway implements GatewayInterface
         return new StripeResponse($response->json(), $response->status());
     }
 
+    /**
+     * @param array{
+     *  amount: float|int,
+     *  currency: string,
+     *  destination?: string,
+     *  metadata?: array
+     * } $parameters
+     */
     public function withdraw(array $parameters): GatewayResponseInterface
     {
-        // Stripe Payouts example
+        // Stripe Payouts
         $response = Http::withToken($this->config['api_secret'])
             ->asForm()
             ->post($this->getBaseUrl() . '/payouts', [
@@ -56,16 +101,13 @@ class StripeGateway implements GatewayInterface
 
     public function handleIpn(mixed $request): GatewayResponseInterface
     {
-        // Simple example: Stripe sends JSON in request body
         $data = is_array($request) ? $request : $request->all();
         return new StripeResponse($data, 200);
     }
 
     protected function getBaseUrl(): string
     {
-        return $this->isSandbox()
-            ? 'https://api.stripe.com/v1' // Test mode URL
-            : 'https://api.stripe.com/v1'; // Live mode URL (Stripe uses the same, but others don't)
+        return 'https://api.stripe.com/v1'; // Live mode URL (Stripe uses the same for both)
     }
 
     public function supports(string $method): bool

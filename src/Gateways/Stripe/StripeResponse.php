@@ -22,12 +22,12 @@ class StripeResponse implements GatewayResponseInterface
 
     public function isRedirect(): bool
     {
-        return false;
+        return isset($this->data['url']);
     }
 
     public function getRedirectUrl(): ?string
     {
-        return null;
+        return $this->data['url'] ?? null;
     }
 
     public function getTransactionReference(): ?string

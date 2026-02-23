@@ -23,16 +23,13 @@ Route::get('/test-stripe', function () {
         $response = PayBridge::gateway('stripe')->charge([
             'amount' => 10,
             'currency' => 'usd',
-            'token' => 'tok_visa', // Stripe test token
+            'success_url' => url('/test-stripe?status=success'),
+            'cancel_url' => url('/test-stripe?status=cancel'),
             'description' => 'Workbench Manual Test'
         ]);
 
-        if ($response->isSuccessful()) {
-            return [
-                'status' => 'success',
-                'ref' => $response->getTransactionReference(),
-                'data' => $response->getData()
-            ];
+        if ($response->isRedirect()) {
+            return redirect($response->getRedirectUrl());
         }
 
         return [
