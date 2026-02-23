@@ -16,7 +16,7 @@ Route::get('/test-stripe', function () {
     // Note: You must set these in your .env file
     config(['paybridge.gateways.stripe' => [
         'driver' => 'stripe',
-        'api_secret' => env('STRIPE_SECRET', 'sk_test_51KHQhKAmfDlh6wQqXfg4ZScnTRahxbdXV0mKw30nOI4f8gtB2v5rho7IyJtZqkf8SwwuNgLTO2WPGFyk9vnFl8gO00MhSe8Kbj'),
+        'api_secret' => env('STRIPE_SECRET', ''),
     ]]);
 
     try {
